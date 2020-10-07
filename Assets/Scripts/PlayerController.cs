@@ -1,15 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] Camera mainCamera = null;
+    [SerializeField] PlayerRotationController rotationController = null;
+    [SerializeField] CheckpointManager        checkpointManager  = null;
     
     PlayerMotor m_playerMotor;
 
+    Transform m_transform;
+
     void Start()
-    {
+    {                 
         m_playerMotor = GetComponent<PlayerMotor>();
+        m_transform   = transform;
+
+        checkpointManager.SetCheckpoint(m_transform.position, rotationController.GetEulerRotation(), false);
     }
 
     void Update()
@@ -22,5 +29,26 @@ public class PlayerController : MonoBehaviour
         bool jump = Input.GetKeyDown(KeyCode.Space);
 
         m_playerMotor.Move(forward, backward, right, left, jump);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.CompareTag("Spikes"))
+        {
+            RespawnAtLastCheckpoint();
+        }
+        else if (other.transform.CompareTag("Checkpoint"))
+        {
+            checkpointManager.SetCheckpoint(m_transform.position, rotationController.GetEulerRotation());
+
+            Destroy(other.gameObject);
+        }
+    }
+
+    void RespawnAtLastCheckpoint()
+    {
+        m_playerMotor     .ResetVelocity();
+        m_playerMotor     .TeleportToPosition(checkpointManager.GetLastCheckpointPosition());
+        rotationController.SetEulerRotation(checkpointManager.GetLastCheckpointRotation());
     }
 }

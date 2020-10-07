@@ -1,16 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
+//For this player motor, I took the version I created for GDW and modified it a bit to fit the context
+
 public class PlayerMotor : MonoBehaviour
 {
-    enum Side
-    {
-        Left,
-        Right,
-        Front,
-        Back
-    }
-
     [SerializeField] PlayerRotationController rotationController;
 
     [Header("Grounded Basic Movement")]
@@ -82,6 +76,18 @@ public class PlayerMotor : MonoBehaviour
     public float GetGroundedVelocityY()
     {
         return GROUNDED_VELOCITY_Y;
+    }
+
+    public void ResetVelocity()
+    {
+        m_velocity = Vector3.zero;
+    }
+
+    public void TeleportToPosition(Vector3 a_teleportPosition)
+    {
+        m_characterController.enabled = false;
+        m_transform.position = a_teleportPosition;
+        m_characterController.enabled = true;
     }
 
     void UpdateJumpVelocityY()

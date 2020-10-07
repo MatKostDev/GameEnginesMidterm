@@ -38,6 +38,8 @@ public class PlayerRotationController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible   = false;
+
+        yaw = playerTransform.eulerAngles.y;
     }
 
     void Update()
@@ -53,6 +55,25 @@ public class PlayerRotationController : MonoBehaviour
         m_transform.localRotation = Quaternion.Euler(newRotation);
 
         yaw += m_currentFrameMouseX;
+        playerTransform.localRotation = Quaternion.Euler(0f, yaw, 0f);
+    }
+
+    public Vector3 GetEulerRotation()
+    {
+        return new Vector3(pitch, yaw, roll);
+    }
+
+    public void SetEulerRotation(Vector3 newEulerAngles)
+    {
+        pitch = newEulerAngles.x;
+        yaw   = newEulerAngles.y;
+        roll  = newEulerAngles.z;
+
+        Vector3 newCameraRotation = m_transform.localRotation.eulerAngles;
+        newCameraRotation.x = pitch;
+        newCameraRotation.z = roll;
+        m_transform.localRotation = Quaternion.Euler(newCameraRotation);
+
         playerTransform.localRotation = Quaternion.Euler(0f, yaw, 0f);
     }
 
