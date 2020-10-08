@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /*
@@ -14,13 +15,22 @@ using UnityEngine.SceneManagement;
 
 public class StartMenuScript : MonoBehaviour
 {
+    void Start()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible   = true;
+    }
+
     public void StartGame()
     {
+        UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null); //reset in case a button was previously selected
         SceneManager.LoadScene("PlayScene");
     }
 
     public void ViewPreviousStats()
     {
+        UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null); //reset in case a button was previously selected
+
         if (FindObjectOfType<CheckpointManager>())
             SceneManager.LoadScene("EndScene");
     }

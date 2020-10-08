@@ -18,7 +18,6 @@ public class PlayerEffects : MonoBehaviour
     Vignette m_vignette;
 
     float m_vignetteInitialIntensity;
-    float m_vignetteInitialSmoothness;
     Color m_vignetteInitialColor;
     float m_vignetteFadeParam = 1f;
 
@@ -34,9 +33,8 @@ public class PlayerEffects : MonoBehaviour
 
         m_postProcessVolume.profile.TryGet(out m_vignette);
 
-        m_vignetteInitialIntensity  = m_vignette.intensity.value;
-        m_vignetteInitialSmoothness = m_vignette.smoothness.value;
-        m_vignetteInitialColor      = m_vignette.color.value;
+        m_vignetteInitialIntensity = m_vignette.intensity.value;
+        m_vignetteInitialColor     = m_vignette.color.value;
     }
 
     void Update()

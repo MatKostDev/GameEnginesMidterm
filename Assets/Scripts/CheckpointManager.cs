@@ -8,6 +8,10 @@ public class CheckpointManager : MonoBehaviour
 {
     public int totalNumberOfCheckpoints;
 
+    public CheckpointUIManager checkpointUI;
+
+    [HideInInspector] public bool didGameJustFinish = false;
+
     Vector3 m_lastCheckpointPosition;
     Vector3 m_lastCheckpointRotation;
 
@@ -80,21 +84,29 @@ public class CheckpointManager : MonoBehaviour
 
     public void SetCheckpoint(Vector3 a_position, Vector3 a_rotation, bool isNewCheckpoint = true)
     {
+        float newCheckpointTime = Time.timeSinceLevelLoad;
+
         m_lastCheckpointPosition = a_position;
         m_lastCheckpointRotation = a_rotation;
 
         if (isNewCheckpoint)
         {
-            SaveCheckpointTime(Time.timeSinceLevelLoad);
+            SaveCheckpointTime(newCheckpointTime);
+
             if (NumCheckpointsReached() >= totalNumberOfCheckpoints)
             {
                 OnLastCheckpointReached();
+            }
+            else
+            {
+                checkpointUI.ActivateCheckpointsPopup(NumCheckpointsReached(), newCheckpointTime);
             }
         }
     }
 
     void OnLastCheckpointReached()
     {
+        didGameJustFinish = true;
         SceneManager.LoadScene("EndScene");
     }
 
@@ -104,6 +116,11 @@ public class CheckpointManager : MonoBehaviour
         {
             m_lastTime = Time.timeSinceLevelLoad;
             ResetCheckpointLogs();
+
+            if (!checkpointUI)
+            {
+                checkpointUI = FindObjectOfType<CheckpointUIManager>();
+            }
         }
     }
 }
