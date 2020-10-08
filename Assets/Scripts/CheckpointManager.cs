@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Xml.Schema;
+using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class CheckpointManager : MonoBehaviour
@@ -10,9 +11,62 @@ public class CheckpointManager : MonoBehaviour
     Vector3 m_lastCheckpointPosition;
     Vector3 m_lastCheckpointRotation;
 
-    List<float> m_checkpointTimes = new List<float>();
+    const string DLL_NAME = "GameEnginesMidtermDLL";
 
-    int m_numberofCheckpointsReached = 0;
+    [DllImport(DLL_NAME)]
+    private static extern void ResetLogger();
+
+    [DllImport(DLL_NAME)]
+    private static extern void SaveCheckpointTime(float RTBC);
+
+    [DllImport(DLL_NAME)]
+    private static extern float GetTotalTime();
+
+    [DllImport(DLL_NAME)]
+    private static extern float GetCheckpointTime(int index);
+
+    [DllImport(DLL_NAME)]
+    private static extern int GetNumCheckpoints();
+
+    float m_lastTime = 0f;
+
+    void Start()
+    {
+        DontDestroyOnLoad(this);
+
+        m_lastTime = Time.timeSinceLevelLoad;
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
+        ResetCheckpointLogs();
+    }
+
+    public int NumCheckpointsReached()
+    {
+        return GetNumCheckpoints();
+    }
+
+    public float GetTimeForCheckpointIndex(int index)
+    {
+        if (index >= GetNumCheckpoints())
+        {
+            return -1f;
+        }
+        else
+        {
+            return GetCheckpointTime(index);
+        }
+    }
+
+    public float GetTotalRunTime()
+    {
+        return GetTotalTime();
+    }
+
+    public void ResetCheckpointLogs()
+    {
+        ResetLogger();
+    }
 
     public Vector3 GetLastCheckpointPosition()
     {
@@ -26,15 +80,13 @@ public class CheckpointManager : MonoBehaviour
 
     public void SetCheckpoint(Vector3 a_position, Vector3 a_rotation, bool isNewCheckpoint = true)
     {
-        m_checkpointTimes.Add(Time.timeSinceLevelLoad);
-
         m_lastCheckpointPosition = a_position;
         m_lastCheckpointRotation = a_rotation;
 
         if (isNewCheckpoint)
         {
-            m_numberofCheckpointsReached++;
-            if (m_numberofCheckpointsReached >= totalNumberOfCheckpoints)
+            SaveCheckpointTime(Time.timeSinceLevelLoad);
+            if (NumCheckpointsReached() >= totalNumberOfCheckpoints)
             {
                 OnLastCheckpointReached();
             }
@@ -44,5 +96,14 @@ public class CheckpointManager : MonoBehaviour
     void OnLastCheckpointReached()
     {
         SceneManager.LoadScene("EndScene");
+    }
+
+    void OnSceneLoaded(Scene a_scene, LoadSceneMode a_sceneMode)
+    {
+        if (a_scene.name == "PlayScene")
+        {
+            m_lastTime = Time.timeSinceLevelLoad;
+            ResetCheckpointLogs();
+        }
     }
 }

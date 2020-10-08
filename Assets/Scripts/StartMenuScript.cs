@@ -21,6 +21,7 @@ public class StartMenuScript : MonoBehaviour
 
     public void ViewPreviousStats()
     {
-        SceneManager.LoadScene("EndScene");
+        if (FindObjectOfType<CheckpointManager>())
+            SceneManager.LoadScene("EndScene");
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-//For this player motor, I took the version I created for GDW and modified it a bit to fit the context
+//For this player motor, I took the version I created for GDW and modified it to fit the context
 
 public class PlayerMotor : MonoBehaviour
 {
@@ -24,7 +24,7 @@ public class PlayerMotor : MonoBehaviour
 
     const float GROUNDED_VELOCITY_Y = -2f;
 
-    const float COYOTE_TIME      = 0.1f;
+    const float COYOTE_TIME      = 0.05f;
     const float JUMP_BUFFER_TIME = 0.07f;
 
     const float SLOPE_RIDE_DISTANCE_LIMIT           = 3f;  //the max distance above a slope where the player can be considered to be "on" it

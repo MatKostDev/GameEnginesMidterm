@@ -29,6 +29,12 @@ public class PlayerController : MonoBehaviour
         bool jump = Input.GetKeyDown(KeyCode.Space);
 
         m_playerMotor.Move(forward, backward, right, left, jump);
+
+        //dirty check for if the player gets out of bounds
+        if (m_transform.position.y < -4f || m_transform.position.y > 10f)
+        {
+            RespawnAtLastCheckpoint();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
