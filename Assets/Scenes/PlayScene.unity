@@ -26369,7 +26369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aee39f573b0e0b49a2bba288699a433, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 50
+  mouseSensitivity: 80
   playerTransform: {fileID: 1568114398}
   playerMotor: {fileID: 1568114395}
   maxCameraBobOffset: 0.085
@@ -31545,7 +31545,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh474276
+  m_Name: pb_Mesh793564
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
