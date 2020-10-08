@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] PlayerRotationController rotationController = null;
     [SerializeField] CheckpointManager        checkpointManager  = null;
+    [SerializeField] PlayerEffects            playerEffects      = null;
     
     PlayerMotor m_playerMotor;
 
@@ -46,6 +47,7 @@ public class PlayerController : MonoBehaviour
         else if (other.transform.CompareTag("Checkpoint"))
         {
             checkpointManager.SetCheckpoint(m_transform.position, rotationController.GetEulerRotation());
+            playerEffects.OnCheckpointReached();
 
             Destroy(other.gameObject);
         }
@@ -53,6 +55,8 @@ public class PlayerController : MonoBehaviour
 
     void RespawnAtLastCheckpoint()
     {
+        playerEffects.OnDie();
+
         m_playerMotor     .ResetVelocity();
         m_playerMotor     .TeleportToPosition(checkpointManager.GetLastCheckpointPosition());
         rotationController.SetEulerRotation(checkpointManager.GetLastCheckpointRotation());
