@@ -32,13 +32,9 @@ public class CheckpointManager : MonoBehaviour
     [DllImport(DLL_NAME)]
     private static extern int GetNumCheckpoints();
 
-    float m_lastTime = 0f;
-
     void Start()
     {
         DontDestroyOnLoad(this);
-
-        m_lastTime = Time.timeSinceLevelLoad;
 
         SceneManager.sceneLoaded += OnSceneLoaded;
 
@@ -114,7 +110,6 @@ public class CheckpointManager : MonoBehaviour
     {
         if (a_scene.name == "PlayScene")
         {
-            m_lastTime = Time.timeSinceLevelLoad;
             ResetCheckpointLogs();
 
             if (!checkpointUI)

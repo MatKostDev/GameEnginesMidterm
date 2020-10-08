@@ -30,7 +30,8 @@ public class CheckpointUIManager : MonoBehaviour
         {
             m_checkpointIconFadeParam += checkpointIconFadeSpeed * Time.deltaTime;
 
-            float newAlpha = Mathf.Lerp(6f, 0f, m_checkpointIconFadeParam);
+            //alpha is 0-1, but starting it at >1 lets me keep it on screen for a bit before it starts fading out
+            float newAlpha = Mathf.Lerp(6f, 0f, m_checkpointIconFadeParam); 
 
             Color newColor = checkpointIcons[0].color;
             newColor.a     = newAlpha;

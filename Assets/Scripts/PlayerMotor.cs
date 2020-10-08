@@ -10,7 +10,7 @@ public class PlayerMotor : MonoBehaviour
     [Header("Grounded Basic Movement")]
     [SerializeField] float accelerationRateGrounded = 0f;
     [SerializeField] float decelerationRateGrounded = 0f;
-    [SerializeField] float maxMovementSpeedGrounded = 0f;
+    public float maxMovementSpeedGrounded = 0f;
 
     [Header("Aerial Basic Movement")]
     [SerializeField] float accelerationRateAirborne = 0f;
@@ -86,7 +86,7 @@ public class PlayerMotor : MonoBehaviour
     public void TeleportToPosition(Vector3 a_teleportPosition)
     {
         m_characterController.enabled = false;
-        m_transform.position = a_teleportPosition;
+        m_transform.position          = a_teleportPosition;
         m_characterController.enabled = true;
     }
 

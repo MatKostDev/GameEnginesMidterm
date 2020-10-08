@@ -2,17 +2,28 @@
 
 public class PlayerRotationController : MonoBehaviour
 {
+    [Header("General")]
     public float mouseSensitivity;
 
     public Transform playerTransform;
 
-    public float yaw;
-    public float pitch;
-    public float roll;
+    public PlayerMotor playerMotor;
+
+    [Header("Camera Bobbing")]
+    public float maxCameraBobOffset;
+    public float cameraBobSpeed;
+
+    [HideInInspector] public float yaw;
+    [HideInInspector] public float pitch;
+    [HideInInspector] public float roll;
 
     Transform m_transform;
 
     float m_currentFrameMouseX;
+
+    float m_cameraBobInterpolationParam = 0.5f;
+    bool  m_isCameraBobbingUp           = true;
+    float m_initialCameraY;
 
     public float CurrentFrameMouseX
     {
@@ -40,12 +51,16 @@ public class PlayerRotationController : MonoBehaviour
         Cursor.visible   = false;
 
         yaw = playerTransform.eulerAngles.y;
+
+        m_initialCameraY = m_transform.localPosition.y;
+
+        ApplyCameraBobbing(); //apply 1 frame of camera bobbing at the start to allow a smoother transition once moving starts
     }
 
     void Update()
     {
-        m_currentFrameMouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        m_currentFrameMouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        m_currentFrameMouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.fixedDeltaTime;
+        m_currentFrameMouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.fixedDeltaTime;
 
         pitch -= m_currentFrameMouseY;
         pitch =  Mathf.Clamp(pitch, -80f, 80f);
@@ -56,6 +71,11 @@ public class PlayerRotationController : MonoBehaviour
 
         yaw += m_currentFrameMouseX;
         playerTransform.localRotation = Quaternion.Euler(0f, yaw, 0f);
+
+        if (playerMotor.IsGrounded)
+        {
+            ApplyCameraBobbing();
+        }
     }
 
     public Vector3 GetEulerRotation()
@@ -83,5 +103,36 @@ public class PlayerRotationController : MonoBehaviour
         Vector3 newRotation = m_transform.localRotation.eulerAngles;
         newRotation.z = roll;
         m_transform.localRotation = Quaternion.Euler(newRotation);
+    }
+
+    void ApplyCameraBobbing()
+    {
+        float playerVelocityMagnitudeXZ = new Vector3(playerMotor.Velocity.x, 0f, playerMotor.Velocity.z).magnitude;
+
+        float velocityRelativeToMax = playerVelocityMagnitudeXZ / playerMotor.maxMovementSpeedGrounded;
+
+        m_cameraBobInterpolationParam += cameraBobSpeed * velocityRelativeToMax * Time.deltaTime;
+        if (m_cameraBobInterpolationParam > 1f)
+        {
+            m_isCameraBobbingUp = !m_isCameraBobbingUp;
+            m_cameraBobInterpolationParam = 0f;
+        }
+
+        Vector3 newPosition = m_transform.localPosition;
+        float startY;
+        float endY;
+        if (m_isCameraBobbingUp)
+        {
+            startY = m_initialCameraY - maxCameraBobOffset;
+            endY   = m_initialCameraY + maxCameraBobOffset;
+        }
+        else
+        {
+            startY = m_initialCameraY + maxCameraBobOffset;
+            endY   = m_initialCameraY - maxCameraBobOffset;
+        }
+        newPosition.y = Mathf.Lerp(startY, endY, m_cameraBobInterpolationParam);
+
+        m_transform.localPosition = newPosition;
     }
 }
