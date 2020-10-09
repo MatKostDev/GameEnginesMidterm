@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
  *
  * Assets used: https://assetstore.unity.com/packages/3d/environments/dungeons/dungeon-traps-50655
  *              https://assetstore.unity.com/packages/3d/environments/dungeons/decrepit-dungeon-lite-33936
+ *              https://www.youtube.com/watch?v=tJkQs5xEhPU
  */
 
 public class StartMenuScript : MonoBehaviour
