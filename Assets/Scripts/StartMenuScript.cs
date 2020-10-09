@@ -35,4 +35,9 @@ public class StartMenuScript : MonoBehaviour
         if (FindObjectOfType<CheckpointManager>())
             SceneManager.LoadScene("EndScene");
     }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
 }
