@@ -44,7 +44,7 @@ public class CheckpointUIManager : MonoBehaviour
         }
     }
 
-    public void ActivateCheckpointsPopup(int a_numCheckpointsReached, float a_newestCheckpointTime)
+    public void ActivateCheckpointsPopup(bool a_wasNewCheckpointReached, int a_numCheckpointsReached, float a_newestCheckpointTime)
     {
         for (int i = 0; i < a_numCheckpointsReached; i++)
         {
@@ -52,7 +52,7 @@ public class CheckpointUIManager : MonoBehaviour
 
             m_checkpointIconFadeParam = 0f;
 
-            if (i != a_numCheckpointsReached - 1)
+            if (i != a_numCheckpointsReached - 1 || !a_wasNewCheckpointReached)
                 continue;
 
             float minutes = Mathf.Floor(a_newestCheckpointTime / 60);
