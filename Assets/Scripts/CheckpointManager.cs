@@ -95,7 +95,7 @@ public class CheckpointManager : MonoBehaviour
             }
             else
             {
-                checkpointUI.ActivateCheckpointsPopup(NumCheckpointsReached(), newCheckpointTime);
+                checkpointUI.ActivateCheckpointsPopup(true, NumCheckpointsReached(), newCheckpointTime);
             }
         }
     }

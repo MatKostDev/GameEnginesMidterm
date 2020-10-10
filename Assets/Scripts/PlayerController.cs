@@ -36,6 +36,11 @@ public class PlayerController : MonoBehaviour
         {
             RespawnAtLastCheckpoint();
         }
+
+        if (Input.GetKey(KeyCode.Tab))
+        {
+            checkpointManager.checkpointUI.ActivateCheckpointsPopup(false, checkpointManager.NumCheckpointsReached(), -1f); //show times but do not add new entry
+        }
     }
 
     private void OnTriggerEnter(Collider other)
